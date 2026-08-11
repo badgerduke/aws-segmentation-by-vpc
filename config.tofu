@@ -2,12 +2,12 @@ terraform {
   required_providers {
     aws = {
       version = "~> 6.0.0"
-      source  = "hashicorp/aws"
+      source  = "opentofu/aws"
     }
   }
   backend "s3" {
     bucket       = "hamacher-opentofu-state"
-    key          = "aws-segmentation-by-vpc"
+    key          = "aws-segmentation-by-vpc/terraform.tfstate"
     region       = "us-east-1"
     use_lockfile = true
   }
