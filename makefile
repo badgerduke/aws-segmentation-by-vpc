@@ -8,8 +8,11 @@ else ifeq ($(TF_ENGINE), opentofu)
 endif
 
 fmt:
-	$(TF_BINARY) fmt -recursive .
+	$(TF_BINARY) fmt -recursive
 
+val:
+	AWS_PROFILE=$(AWS_PROFILE) $(TF_BINARY) validate
+	
 init:
 	AWS_PROFILE=$(AWS_PROFILE) $(TF_BINARY) init
 
