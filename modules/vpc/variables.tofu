@@ -1,6 +1,6 @@
 variable "environmental_vpc_config" {
   description = "Configuration for environemnt VPCs"
-  type = map(object({
+  type = object({
     name = string
     cidr_block = string
     private_subnets = map(object({
@@ -15,5 +15,10 @@ variable "environmental_vpc_config" {
         nat_gateway = bool
         load_balancer = bool
     }))
-  }))
+  })
+}
+
+variable "vpc_key" {
+  description = "The key value of a VPC map associated with this environmental_vpc_config"
+  type = string
 }

@@ -1,36 +1,30 @@
 locals {
-
-  dev_natgw_subnets = {for key, value in var.environmental_vpc_config["dev_vpc"].public_subnets : key => value if value.nat_gateway == true}
-  dev_natgw_subnet_ids = [for subnet_id in module.development_public_subnets.subnet_id : subnet_id if subnet_id == [for subnet in dev_natgw_subnets: ]
-  dev_natgw_subnet_ids = [for subnet_id in ] 
-    
-    
-  }]
-    source = ""
-    
-  }.public_subnets : ]
+  natgw_subnets = {for key, value in var.environmental_vpc_config[var.vpc_key].public_subnets : key => value if value.nat_gateway == true}
 }
 
-module "development_vpc" {
+module "vpc" {
   source = "./vpc"
-  vpc_config = var.environmental_vpc_config["dev_vpc"]
-}s
+  vpc_config = var.environmental_vpc_config[var.vpc_key]
+}
 
-module "development_public_subnets" {
-  source = "./public_subnets"
+module "nat_gateway_public_subnets" {
+  source = "./nat_gateway_public_subnet"
+  for_each = local.natgw_subnets
   vpc_id = module.development_vpc.vpc_id
-  internet_gateway_id = module.development_vpc.igw_id
-  public_subnet_config = var.environmental_vpc_config["dev_vpc"].public_subnets
+  internet_gateway_id = module.vpc.igw_id
+  public_subnet_config = each.value
 }
 
-module "development_nat_gateway" {
-  source = "./nat_gateways"
+module "nat_gateway" {
+  source = "./nat_gateway"
+  # Choose one of the natgw public sunsets for the NAT Gateway
+  subnet_id = values(module.nat_gateway_public_subnets)[0]
 }
 
 
-module "development_private_subnets" {
+module "private_subnets" {
   source = "./private_subnets"
   vpc_id = module.development_vpc.vpc_id
   private_subnet_config = var.environmental_vpc_config["dev_vpc"].private_subnets
-  nat_gateway_id = 
+  nat_gateway_id = module.nat_gateway.nat_gateway_id
 }

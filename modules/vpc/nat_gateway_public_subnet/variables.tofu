@@ -14,6 +14,7 @@ variable "public_subnet_config" {
       name = string  
       cidr_block = string
       availability_zone = string
-      private = bool
+      nat_gateway = bool
+      load_balancer = bool
     })
 }
