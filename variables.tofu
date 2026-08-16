@@ -7,6 +7,12 @@ variable "environmental_vpc_config" {
       name = string  
       cidr_block = string
       availability_zone = string
+      ec2 = map(object({
+        webserver_tag_name = string
+        webserver_role_name = string
+        user_data_file = string
+        message = string
+      }))
     }))
     public_subnets = map(object({
         name = string
